@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+</head>
+<body>
+    <main>
+        <h1>Авторизация</h1>
+        <section>
+            <form method="POST">
+            <label for="username">Логин:</label>
+            <input id="username" name="username" type="text" required>
+            <label for="password">Пароль:</label>
+            <input id="password" name="password" type="text" required>
+            <button type="submit">Войти</button>
+            </form>
+        </section>
+    </main>
+</body>
+
+    <title>Управление дроном</title>
+    <!-- <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script> -->
+    <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <main>
+        <h1>Панель управления дроном</h1>
+        <form action="{{ url_for('logout') }}">
+            <button type="submit">Выйти</button>
+        </form>
+        <section>
+            <h2>Телеметрия</h2>
+            <p><strong>Время:</strong> <span id="time">N/A</span> ч</p>
+            <p><strong>Скорость:</strong> <span id="speed">N/A</span> м/с</p>
+            <p><strong>Батарея:</strong> <span id="battery">N/A</span> %</p>
+            <p><strong>Сигнал:</strong> <span id="signal">N/A</span> мВт</p>
+            <div class="coord"><strong>Координаты:</strong>
+                <p><strong>Направление:</strong><span id="direction">N/A</span></p>
+                <p><strong>Широта:</strong><span id="latitude">N/A</span></p>
+                <p><strong>Долгота:</strong><span id="longitude">N/A</span></p>
+                <p><strong>Высота:</strong><span id="altitude">N/A</span> м</p>
+            </div>
+        </section>
+    </main>
+    <script>
+        var socket = io();
+
+        socket.on('connect', () => {
+            console.log('Подключен с серверу')
+        })
+
+        socket.on('update_telemetry', (data) => {
+            document.getElementById("time").innerText = data.time;
+            document.getElementById("speed").innerText = data.speed;
+            document.getElementById("battery").innerText = data.battery;
+            document.getElementById("signal").innerText = data.signal;
+            document.getElementById("direction").innerText = data.direction;
+            document.getElementById("latitude").innerText = data.latitude;
+            document.getElementById("longitude").innerText = data.longitude;
+            document.getElementById("altitude").innerText = data.altitude;
+        });
+    </script>
+</body>
+</html>
